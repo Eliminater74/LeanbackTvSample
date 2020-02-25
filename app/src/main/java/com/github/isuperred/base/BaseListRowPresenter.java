@@ -7,6 +7,8 @@ import androidx.leanback.widget.RowPresenter;
 
 public class BaseListRowPresenter extends ListRowPresenter {
 
+    private BaseOnItemViewClickedListener onItemViewClickedListener;
+
     @Override
     protected void onRowViewAttachedToWindow(RowPresenter.ViewHolder vh) {
         super.onRowViewAttachedToWindow(vh);
@@ -23,13 +25,11 @@ public class BaseListRowPresenter extends ListRowPresenter {
         }
     }
 
-    private BaseOnItemViewClickedListener onItemViewClickedListener;
+    public BaseOnItemViewClickedListener getOnItemViewClickedListener() {
+        return onItemViewClickedListener;
+    }
 
     public void setOnItemViewClickedListener(BaseOnItemViewClickedListener onItemViewClickedListener) {
         this.onItemViewClickedListener = onItemViewClickedListener;
-    }
-
-    public BaseOnItemViewClickedListener getOnItemViewClickedListener() {
-        return onItemViewClickedListener;
     }
 }

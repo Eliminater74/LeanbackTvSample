@@ -17,7 +17,6 @@ import androidx.leanback.widget.ShadowOverlayHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.isuperred.R;
-import com.github.isuperred.widgets.focus.FocusHighlightHandler;
 
 import static androidx.leanback.widget.FocusHighlight.ZOOM_FACTOR_LARGE;
 import static androidx.leanback.widget.FocusHighlight.ZOOM_FACTOR_MEDIUM;
@@ -28,6 +27,7 @@ import static androidx.leanback.widget.FocusHighlight.ZOOM_FACTOR_XSMALL;
 public class MyFocusHighlightHelper {
     public static final int ZOOM_FACTOR_XXSMALL = 5;
     public static final int ZOOM_FACTOR_XXXSMALL = 6;
+
     static boolean isValidZoomIndex(int zoomIndex) {
         return zoomIndex == ZOOM_FACTOR_NONE || getResId(zoomIndex) > 0;
     }
@@ -57,24 +57,12 @@ public class MyFocusHighlightHelper {
         private final int mDuration;
         private final ShadowOverlayContainer mWrapper;
         private final float mScaleDiff;
-        private float mFocusLevel = 0f;
-        private float mFocusLevelStart;
-        private float mFocusLevelDelta;
         private final TimeAnimator mAnimator = new TimeAnimator();
         private final Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
         private final ColorOverlayDimmer mDimmer;
-
-        void animateFocus(boolean select, boolean immediate) {
-            endAnimation();
-            final float end = select ? 1 : 0;
-            if (immediate) {
-                setFocusLevel(end);
-            } else if (mFocusLevel != end) {
-                mFocusLevelStart = mFocusLevel;
-                mFocusLevelDelta = end - mFocusLevelStart;
-                mAnimator.start();
-            }
-        }
+        private float mFocusLevel = 0f;
+        private float mFocusLevelStart;
+        private float mFocusLevelDelta;
 
         FocusAnimator(View view, float scale, boolean useDimmer, int duration) {
             mView = view;
@@ -91,6 +79,22 @@ public class MyFocusHighlightHelper {
             } else {
                 mDimmer = null;
             }
+        }
+
+        void animateFocus(boolean select, boolean immediate) {
+            endAnimation();
+            final float end = select ? 1 : 0;
+            if (immediate) {
+                setFocusLevel(end);
+            } else if (mFocusLevel != end) {
+                mFocusLevelStart = mFocusLevel;
+                mFocusLevelDelta = end - mFocusLevelStart;
+                mAnimator.start();
+            }
+        }
+
+        float getFocusLevel() {
+            return mFocusLevel;
         }
 
         void setFocusLevel(float level) {
@@ -112,10 +116,6 @@ public class MyFocusHighlightHelper {
                     ShadowOverlayHelper.setNoneWrapperOverlayColor(mView, color);
                 }
             }
-        }
-
-        float getFocusLevel() {
-            return mFocusLevel;
         }
 
         void endAnimation() {
@@ -140,9 +140,8 @@ public class MyFocusHighlightHelper {
 
     public static class BrowseItemFocusHighlight implements FocusHighlightHandler {
         private static final int DURATION_MS = 150;
-
-        private int mScaleIndex;
         private final boolean mUseDimmer;
+        private int mScaleIndex;
 
         public BrowseItemFocusHighlight(int zoomIndex, boolean useDimmer) {
             if (!isValidZoomIndex(zoomIndex)) {
@@ -200,9 +199,30 @@ public class MyFocusHighlightHelper {
             }
         }
 
+        private void viewFocused(View view, boolean hasFocus) {
+            lazyInit(view);
+            view.setSelected(hasFocus);
+            FocusAnimator animator = (FocusAnimator) view.getTag(R.id.lb_focus_animator);
+            if (animator == null) {
+                animator = new HeaderItemFocusHighlight.HeaderFocusAnimator(view, mSelectScale, mDuration);
+                view.setTag(R.id.lb_focus_animator, animator);
+            }
+            animator.animateFocus(hasFocus, false);
+        }
+
+        @Override
+        public void onItemFocused(View view, boolean hasFocus) {
+            viewFocused(view, hasFocus);
+        }
+
+        @Override
+        public void onInitializeView(View view) {
+        }
+
         static class HeaderFocusAnimator extends FocusAnimator {
 
             ItemBridgeAdapter.ViewHolder mViewHolder;
+
             HeaderFocusAnimator(View view, float scale, int duration) {
                 super(view, scale, false, duration);
 
@@ -229,26 +249,6 @@ public class MyFocusHighlightHelper {
                 super.setFocusLevel(level);
             }
 
-        }
-
-        private void viewFocused(View view, boolean hasFocus) {
-            lazyInit(view);
-            view.setSelected(hasFocus);
-            FocusAnimator animator = (FocusAnimator) view.getTag(R.id.lb_focus_animator);
-            if (animator == null) {
-                animator = new HeaderItemFocusHighlight.HeaderFocusAnimator(view, mSelectScale, mDuration);
-                view.setTag(R.id.lb_focus_animator, animator);
-            }
-            animator.animateFocus(hasFocus, false);
-        }
-
-        @Override
-        public void onItemFocused(View view, boolean hasFocus) {
-            viewFocused(view, hasFocus);
-        }
-
-        @Override
-        public void onInitializeView(View view) {
         }
 
     }

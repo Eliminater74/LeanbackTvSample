@@ -9,7 +9,6 @@ import androidx.leanback.widget.HorizontalGridView;
 import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.RowPresenter;
 
-import com.github.isuperred.R;
 import com.github.isuperred.activity.VideoDetailActivity;
 import com.github.isuperred.base.BaseListRowPresenter;
 import com.github.isuperred.bean.Content;

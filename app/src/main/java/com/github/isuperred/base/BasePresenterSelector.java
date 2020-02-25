@@ -18,8 +18,9 @@ public class BasePresenterSelector extends PresenterSelector {
 
     /**
      * Adds a presenter to be used for the given class.
-     * @param cls item 类型
-     * @param presenter  presenter
+     *
+     * @param cls       item 类型
+     * @param presenter presenter
      */
     public void addClassPresenter(Class<?> cls, Presenter presenter) {
         mClassSingleMap.put(cls, presenter);
@@ -30,9 +31,10 @@ public class BasePresenterSelector extends PresenterSelector {
 
     /**
      * Adds a presenter to be used for the given class.
-     * @param cls item 类型
+     *
+     * @param cls       item 类型
      * @param presenter presenter
-     * @param childType  当包含多个相同{@param cls}时，并且presenter不同，则通过子item{@param childType}区分
+     * @param childType 当包含多个相同{@param cls}时，并且presenter不同，则通过子item{@param childType}区分
      */
     public void addClassPresenter(Class<?> cls, Presenter presenter, Class<?> childType) {
         ArrayMap<Class<?>, Presenter> classPresenterArrayMap = mClassMap.get(cls);

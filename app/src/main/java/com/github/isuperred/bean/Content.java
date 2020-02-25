@@ -8,6 +8,17 @@ import java.util.List;
 
 public class Content implements Parcelable {
 
+    public static final Creator<Content> CREATOR = new Creator<Content>() {
+        @Override
+        public Content createFromParcel(Parcel in) {
+            return new Content(in);
+        }
+
+        @Override
+        public Content[] newArray(int size) {
+            return new Content[size];
+        }
+    };
     /**
      * code : 200
      * total_count : 12
@@ -22,18 +33,6 @@ public class Content implements Parcelable {
         code = in.readInt();
         total_count = in.readInt();
     }
-
-    public static final Creator<Content> CREATOR = new Creator<Content>() {
-        @Override
-        public Content createFromParcel(Parcel in) {
-            return new Content(in);
-        }
-
-        @Override
-        public Content[] newArray(int size) {
-            return new Content[size];
-        }
-    };
 
     public int getCode() {
         return code;
@@ -70,7 +69,18 @@ public class Content implements Parcelable {
         dest.writeInt(total_count);
     }
 
-    public static class DataBean implements Parcelable{
+    public static class DataBean implements Parcelable {
+        public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
+            @Override
+            public DataBean createFromParcel(Parcel in) {
+                return new DataBean(in);
+            }
+
+            @Override
+            public DataBean[] newArray(int size) {
+                return new DataBean[size];
+            }
+        };
         /**
          * id : 9966
          * title : Banner
@@ -91,18 +101,6 @@ public class Content implements Parcelable {
             showTitle = in.readByte() != 0;
             contentCode = in.readInt();
         }
-
-        public static final Creator<DataBean> CREATOR = new Creator<DataBean>() {
-            @Override
-            public DataBean createFromParcel(Parcel in) {
-                return new DataBean(in);
-            }
-
-            @Override
-            public DataBean[] newArray(int size) {
-                return new DataBean[size];
-            }
-        };
 
         public int getId() {
             return id;
@@ -157,7 +155,18 @@ public class Content implements Parcelable {
             dest.writeInt(contentCode);
         }
 
-        public static class WidgetsBean implements Parcelable{
+        public static class WidgetsBean implements Parcelable {
+            public static final Creator<WidgetsBean> CREATOR = new Creator<WidgetsBean>() {
+                @Override
+                public WidgetsBean createFromParcel(Parcel in) {
+                    return new WidgetsBean(in);
+                }
+
+                @Override
+                public WidgetsBean[] newArray(int size) {
+                    return new WidgetsBean[size];
+                }
+            };
             /**
              * id : 13
              * contentCode : 1081
@@ -181,18 +190,6 @@ public class Content implements Parcelable {
                 url = in.readString();
                 isBigPic = in.readByte() != 0;
             }
-
-            public static final Creator<WidgetsBean> CREATOR = new Creator<WidgetsBean>() {
-                @Override
-                public WidgetsBean createFromParcel(Parcel in) {
-                    return new WidgetsBean(in);
-                }
-
-                @Override
-                public WidgetsBean[] newArray(int size) {
-                    return new WidgetsBean[size];
-                }
-            };
 
             public int getId() {
                 return id;

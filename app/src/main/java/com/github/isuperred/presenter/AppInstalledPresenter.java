@@ -21,9 +21,8 @@ import com.github.isuperred.bean.AppInfo;
 import com.github.isuperred.utils.FontDisplayUtil;
 
 public class AppInstalledPresenter extends Presenter {
-    private Context mContext;
-
     private static final String TAG = "MoviePresenter";
+    private Context mContext;
 
     @Override
     public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -61,6 +60,15 @@ public class AppInstalledPresenter extends Presenter {
 
     }
 
+    private Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
+        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        final Canvas canvas = new Canvas(bmp);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+        return bmp;
+    }
+
     public static class ViewHolder extends Presenter.ViewHolder {
 
         private final ImageView mIvAppIcon;
@@ -71,14 +79,5 @@ public class AppInstalledPresenter extends Presenter {
             mIvAppIcon = view.findViewById(R.id.iv_app_icon);
             mTvAppName = view.findViewById(R.id.tv_app_name);
         }
-    }
-
-    private Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
-        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(bmp);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bmp;
     }
 }

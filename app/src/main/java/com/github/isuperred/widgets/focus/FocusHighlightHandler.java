@@ -9,10 +9,10 @@ import static androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP_PREFIX;
 interface FocusHighlightHandler {
     /**
      * Called when an item gains or loses focus.
-     * @hide
      *
-     * @param view The view whose focus is changing.
+     * @param view     The view whose focus is changing.
      * @param hasFocus True if focus is gained; false otherwise.
+     * @hide
      */
     @RestrictTo(LIBRARY_GROUP_PREFIX)
     void onItemFocused(View view, boolean hasFocus);

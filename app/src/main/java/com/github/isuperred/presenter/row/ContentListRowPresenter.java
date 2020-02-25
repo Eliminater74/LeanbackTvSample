@@ -3,7 +3,6 @@ package com.github.isuperred.presenter.row;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.leanback.widget.BaseOnItemViewClickedListener;
 import androidx.leanback.widget.HorizontalGridView;

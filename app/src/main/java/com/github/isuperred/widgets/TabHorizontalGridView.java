@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.leanback.widget.HorizontalGridView;
@@ -19,6 +18,9 @@ import com.github.isuperred.utils.Constants;
 
 
 public class TabHorizontalGridView extends HorizontalGridView {
+
+    private Animation shakeX;
+    private Animation mShakeX;
 
     public TabHorizontalGridView(Context context) {
         this(context, null);
@@ -31,8 +33,6 @@ public class TabHorizontalGridView extends HorizontalGridView {
     public TabHorizontalGridView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
-    private Animation shakeX;
 
     @Override
     public View focusSearch(View focused, int direction) {
@@ -128,9 +128,6 @@ public class TabHorizontalGridView extends HorizontalGridView {
         }
         return handled;
     }
-
-    private Animation mShakeX;
-
 
     private void shakeX(View currentFocused) {
         if (currentFocused != null && getScrollState() == SCROLL_STATE_IDLE) {

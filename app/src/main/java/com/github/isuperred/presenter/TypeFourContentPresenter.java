@@ -18,9 +18,8 @@ import com.github.isuperred.utils.FontDisplayUtil;
 
 
 public class TypeFourContentPresenter extends Presenter {
-    private Context mContext;
-
     private static final String TAG = "TypeFourContentPresenter";
+    private Context mContext;
 
     @Override
     public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {

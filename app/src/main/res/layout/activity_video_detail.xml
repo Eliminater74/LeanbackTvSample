@@ -14,11 +14,11 @@
         android:layout_height="237dp"
         android:layout_marginStart="48dp"
         android:layout_marginTop="74dp"
-        android:focusableInTouchMode="true"
+        android:background="@drawable/bg_focus_border_radius3_no_solid"
         android:clickable="true"
         android:focusable="true"
+        android:focusableInTouchMode="true"
         android:padding="2dp"
-        android:background="@drawable/bg_focus_border_radius3_no_solid"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -68,8 +68,8 @@
         android:layout_height="86dp"
         android:layout_marginTop="5dp"
         android:ellipsize="end"
-        android:maxLines="5"
         android:gravity="start"
+        android:maxLines="5"
         android:text="简介：新丽传媒都市律政情感剧《精英律师》讲述了罗槟是全景律师事务所资深合伙人，戴曦为了闺蜜的一场官司去律所找罗槟理论，误打误撞，机缘巧合成了罗槟的助理。在共事过程中，俩人因在为人处世上的见解差异，频发冲突。同时，出于对律师这个职业的热爱，戴曦把过多的时间和精力投入到工作上，最终引起男友的不满，二人分手。在经过几个项目上的相互协作后，戴曦和罗槟对对方都有了更多的了解，戴曦由最初讨厌罗槟，逐渐对他产生尊敬，而罗槟也受戴曦感染，不仅在关心输赢，也变得去关爱他人。历经磨炼，戴曦最终成长为一个优秀富有正义感的律师，在工作上，和罗槟也有了更多的默契，两人成了一对颇得业界认可，所向披靡的最佳搭档。"
         android:textColor="@color/colorWhite"
         app:layout_constraintLeft_toLeftOf="@+id/tv_video_name"
@@ -161,10 +161,10 @@
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:layout_marginTop="13dp"
-        app:focusOutEnd="true"
-        app:focusOutFront="true"
         android:clipChildren="false"
         android:clipToPadding="false"
+        app:focusOutEnd="true"
+        app:focusOutFront="true"
         app:layout_constraintLeft_toLeftOf="@+id/video_player"
         app:layout_constraintTop_toBottomOf="@+id/tv_episode" />
 
@@ -173,9 +173,9 @@
         android:layout_width="wrap_content"
         android:layout_height="27dp"
         android:layout_marginTop="5dp"
-        app:focusOutEnd="true"
         android:clipChildren="false"
         android:clipToPadding="false"
+        app:focusOutEnd="true"
         app:focusOutFront="true"
         app:layout_constraintLeft_toLeftOf="@+id/video_player"
         app:layout_constraintTop_toBottomOf="@+id/hg_episode_content" />

@@ -32,7 +32,7 @@ public class ScaleConstraintLayout extends ConstraintLayout implements View.OnFo
         setClipToPadding(false);
         setOnFocusChangeListener(this);
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ScaleConstraintLayout);
-        int zoomIndex =  typedArray.getInteger(R.styleable.ScaleConstraintLayout_scale_mode, MyFocusHighlightHelper.ZOOM_FACTOR_XXXSMALL);
+        int zoomIndex = typedArray.getInteger(R.styleable.ScaleConstraintLayout_scale_mode, MyFocusHighlightHelper.ZOOM_FACTOR_XXXSMALL);
         typedArray.recycle();
         if (mBrowseItemFocusHighlight == null) {
             mBrowseItemFocusHighlight =

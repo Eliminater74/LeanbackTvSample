@@ -45,7 +45,7 @@ public class ImageRowHeaderPresenter extends RowHeaderPresenter {
     public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {
         View root = LayoutInflater.from(parent.getContext())
                 .inflate(mLayoutResourceId, parent, false);
-        HeadViewHolder viewHolder =  new HeadViewHolder(root);
+        HeadViewHolder viewHolder = new HeadViewHolder(root);
         if (mAnimateSelect) {
             setSelectLevel(viewHolder, 0);
         }
@@ -56,15 +56,15 @@ public class ImageRowHeaderPresenter extends RowHeaderPresenter {
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
         HeaderItem headerItem = item == null ? null : ((Row) item).getHeaderItem();
         if (headerItem == null) {
-            if ( viewHolder.view.findViewById(R.id.row_header) != null) {
-                ((TextView)viewHolder.view.findViewById(R.id.row_header)).setText(null);
+            if (viewHolder.view.findViewById(R.id.row_header) != null) {
+                ((TextView) viewHolder.view.findViewById(R.id.row_header)).setText(null);
             }
             viewHolder.view.setContentDescription(null);
             viewHolder.view.setVisibility(View.GONE);
 
         } else {
             if (viewHolder.view.findViewById(R.id.row_header) != null) {
-                ((TextView)viewHolder.view.findViewById(R.id.row_header)).setText(headerItem.getName());
+                ((TextView) viewHolder.view.findViewById(R.id.row_header)).setText(headerItem.getName());
             }
             viewHolder.view.setContentDescription(headerItem.getContentDescription());
             viewHolder.view.setVisibility(View.VISIBLE);

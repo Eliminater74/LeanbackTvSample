@@ -4,8 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.github.isuperred.fragment.ContentFragment;
 import com.github.isuperred.bean.Title;
+import com.github.isuperred.fragment.ContentFragment;
 
 import java.util.List;
 

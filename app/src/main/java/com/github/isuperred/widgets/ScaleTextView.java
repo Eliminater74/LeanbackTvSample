@@ -12,11 +12,11 @@ public class ScaleTextView extends AppCompatTextView implements View.OnFocusChan
     private MyFocusHighlightHelper.BrowseItemFocusHighlight mBrowseItemFocusHighlight;
 
     public ScaleTextView(Context context) {
-        this(context,null);
+        this(context, null);
     }
 
     public ScaleTextView(Context context, AttributeSet attrs) {
-        this(context, attrs,0);
+        this(context, attrs, 0);
     }
 
     public ScaleTextView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -24,7 +24,7 @@ public class ScaleTextView extends AppCompatTextView implements View.OnFocusChan
         setFocusable(true);
         setClickable(true);
         setFocusableInTouchMode(true);
-        if(mBrowseItemFocusHighlight==null){
+        if (mBrowseItemFocusHighlight == null) {
             mBrowseItemFocusHighlight =
                     new MyFocusHighlightHelper
                             .BrowseItemFocusHighlight(MyFocusHighlightHelper.ZOOM_FACTOR_XXXSMALL, false);

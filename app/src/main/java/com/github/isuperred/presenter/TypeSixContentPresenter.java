@@ -20,9 +20,8 @@ import com.github.isuperred.utils.FontDisplayUtil;
 
 public class TypeSixContentPresenter extends Presenter {
 
-    private Context mContext;
-
     private static final String TAG = "TypeSixContentPresenter";
+    private Context mContext;
 
     @Override
     public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {

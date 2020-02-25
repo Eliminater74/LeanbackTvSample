@@ -22,7 +22,7 @@ public class EpisodeGroupPresenter extends Presenter {
 
     @Override
     public void onBindViewHolder(Presenter.ViewHolder viewHolder, Object item) {
-        if(item instanceof Video.DataBean.EpisodeBean){
+        if (item instanceof Video.DataBean.EpisodeBean) {
             Video.DataBean.EpisodeBean episodeBean = (Video.DataBean.EpisodeBean) item;
             ViewHolder vh = (ViewHolder) viewHolder;
             vh.mTvEpisodeGroup.setText(episodeBean.getGroupName());

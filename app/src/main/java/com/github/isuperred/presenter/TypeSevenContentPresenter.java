@@ -24,10 +24,9 @@ import com.github.isuperred.widgets.focus.MyFocusHighlightHelper;
  * Description  :
  */
 public class TypeSevenContentPresenter extends Presenter {
+    private static final String TAG = "TypeSevenContentPresenter";
     public Context mContext;
     private MyFocusHighlightHelper.BrowseItemFocusHighlight mBrowseItemFocusHighlight;
-
-    private static final String TAG = "TypeSevenContentPresenter";
 
     @Override
     public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -61,7 +60,7 @@ public class TypeSevenContentPresenter extends Presenter {
             if (((Content.DataBean.WidgetsBean) item).isBigPic()) {
                 ImgConstraintLayout.LayoutParams params = (ImgConstraintLayout.LayoutParams) vh.mIvTypeSevenPoster.getLayoutParams();
                 params.width = FontDisplayUtil.dip2px(mContext, 420);
-                params.height =   FontDisplayUtil.dip2px(mContext, 246);
+                params.height = FontDisplayUtil.dip2px(mContext, 246);
                 vh.mClTypeSeven.setLayoutParams(params);
 
 
@@ -76,14 +75,14 @@ public class TypeSevenContentPresenter extends Presenter {
             } else {
                 ImgConstraintLayout.LayoutParams params = (ImgConstraintLayout.LayoutParams) vh.mIvTypeSevenPoster.getLayoutParams();
                 params.width = FontDisplayUtil.dip2px(mContext, 198);
-                params.height =   FontDisplayUtil.dip2px(mContext, 111);
+                params.height = FontDisplayUtil.dip2px(mContext, 111);
                 vh.mClTypeSeven.setLayoutParams(params);
                 Glide.with(mContext)
                         .load(((Content.DataBean.WidgetsBean) item).getUrl())
                         .apply(new RequestOptions()
                                 .centerCrop()
                                 .override(FontDisplayUtil.dip2px(mContext, 198),
-                                          FontDisplayUtil.dip2px(mContext, 111))
+                                        FontDisplayUtil.dip2px(mContext, 111))
                                 .placeholder(R.drawable.bg_shape_default))
                         .into(vh.mIvTypeSevenPoster);
             }

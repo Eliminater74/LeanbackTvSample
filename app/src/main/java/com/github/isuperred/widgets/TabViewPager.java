@@ -21,8 +21,8 @@ import com.github.isuperred.R;
 
 public class TabViewPager extends ViewPager {
     public static final String TAG = "TabViewPager";
-    private Animation mShakeX;
     private final Rect mTempRect = new Rect();
+    private Animation mShakeX;
 
     public TabViewPager(@NonNull Context context) {
         super(context);

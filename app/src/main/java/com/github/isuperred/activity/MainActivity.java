@@ -13,7 +13,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
@@ -58,6 +57,73 @@ public class MainActivity extends BaseActivity implements ContentFragment.OnFrag
     private int mCurrentPageIndex = 0;
     private boolean isSkipTabFromViewPager = false;
     private NetworkChangeReceiver networkChangeReceiver;
+    private Handler mHandler = new MyHandler(this);
+    private HorizontalGridView mHorizontalGridView;
+    private ViewPager mViewPager;
+    private final OnChildViewHolderSelectedListener onChildViewHolderSelectedListener
+            = new OnChildViewHolderSelectedListener() {
+        @Override
+        public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+            super.onChildViewHolderSelected(parent, child, position, subposition);
+            if (child != null & position != mCurrentPageIndex) {
+                Log.e(TAG, "onChildViewHolderSelected: 000 isSkipTabFromViewPager" + isSkipTabFromViewPager);
+                TextView currentTitle = child.itemView.findViewById(R.id.tv_main_title);
+                if (isSkipTabFromViewPager) {
+                    Log.e(TAG, "onChildViewHolderSelected: 111");
+
+                    if (mOldTitle != null) {
+                        Log.e(TAG, "onChildViewHolderSelected: 222");
+
+                        mOldTitle.setTextColor(getResources().getColor(R.color.colorWhite));
+                        Paint paint = mOldTitle.getPaint();
+                        if (paint != null) {
+                            paint.setFakeBoldText(false);
+                            //viewpager切页标题不刷新，调用invalidate刷新
+                            mOldTitle.invalidate();
+                        }
+                    }
+                    currentTitle.setTextColor(getResources().getColor(R.color.colorBlue));
+                    Paint paint = currentTitle.getPaint();
+                    if (paint != null) {
+                        paint.setFakeBoldText(true);
+                        //viewpager切页标题不刷新，调用invalidate刷新
+                        currentTitle.invalidate();
+                    }
+                }
+                mOldTitle = currentTitle;
+            }
+
+            isSkipTabFromViewPager = false;
+            Log.e(TAG, "onChildViewHolderSelected mViewPager != null: " + (mViewPager != null)
+                    + " position:" + position);
+            setCurrentItemPosition(position);
+
+        }
+    };
+    private Group mGroup;
+    private ConstraintLayout mClSearch;
+    private ConstraintLayout mClHistory;
+    private ConstraintLayout mClLogin;
+    private ConstraintLayout mClOpenVip;
+
+//    private boolean isPressUpDownLeftRightBack = false;
+    private ScaleTextView mTvAd;
+    private Thread mThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            String titleJson = LocalJsonResolutionUtil.getJson(MainActivity.this, "MyTitle.json");
+            //转换为对象
+            Title title = LocalJsonResolutionUtil.JsonToObject(titleJson, Title.class);
+            List<Title.DataBean> dataBeans = title.getData();
+            if (dataBeans != null && dataBeans.size() > 0) {
+                Message msg = Message.obtain();
+                msg.what = MSG_NOTIFY_TITLE;
+                msg.obj = dataBeans;
+                mHandler.sendMessage(msg);
+            }
+        }
+    });
+    private boolean isFirstIn = true;
 
     public ArrayObjectAdapter getArrayObjectAdapter() {
         return mArrayObjectAdapter;
@@ -66,9 +132,6 @@ public class MainActivity extends BaseActivity implements ContentFragment.OnFrag
     public HorizontalGridView getHorizontalGridView() {
         return mHorizontalGridView;
     }
-
-    private Handler mHandler = new MyHandler(this);
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -156,58 +219,6 @@ public class MainActivity extends BaseActivity implements ContentFragment.OnFrag
         }
     }
 
-
-    private static class MyHandler extends Handler {
-
-        private final WeakReference<MainActivity> mActivity;
-
-        MyHandler(MainActivity activity) {
-            mActivity = new WeakReference<>(activity);
-        }
-
-        @Override
-        public void handleMessage(Message msg) {
-
-            MainActivity activity = mActivity.get();
-            if (activity != null) {
-                switch (msg.what) {
-                    case MSG_NOTIFY_TITLE:
-                        @SuppressWarnings("unchecked")
-                        List<Title.DataBean> dataBeans = (List<Title.DataBean>) msg.obj;
-                        ArrayObjectAdapter adapter = activity.getArrayObjectAdapter();
-                        if (adapter != null) {
-                            adapter.addAll(0, dataBeans);
-                            activity.initViewPager(dataBeans);
-                            HorizontalGridView horizontalGridView = activity.getHorizontalGridView();
-                            if (dataBeans.size() > Constants.TAG_FEATURE_POSITION) {
-                                if (horizontalGridView != null) {
-                                    horizontalGridView.setSelectedPositionSmooth(Constants.TAG_FEATURE_POSITION);
-                                    View positionView = horizontalGridView.getChildAt(Constants.TAG_FEATURE_POSITION);
-                                    if (positionView != null) {
-                                        activity.mOldTitle = positionView.findViewById(R.id.tv_main_title);
-                                    }
-                                }
-                            } else if (dataBeans.size() > 0) {
-                                if (activity.getHorizontalGridView() != null) {
-                                    horizontalGridView.setSelectedPositionSmooth(0);
-                                    View position0 = horizontalGridView.getChildAt(0);
-                                    if (position0 != null) {
-                                        activity.mOldTitle = position0.findViewById(R.id.tv_main_title);
-                                    }
-                                }
-                            }
-                        }
-                        break;
-                    case 2:
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,8 +228,6 @@ public class MainActivity extends BaseActivity implements ContentFragment.OnFrag
         initListener();
         initBroadCast();
     }
-
-//    private boolean isPressUpDownLeftRightBack = false;
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -260,35 +269,9 @@ public class MainActivity extends BaseActivity implements ContentFragment.OnFrag
         unregisterReceiver(networkChangeReceiver);
     }
 
-    private HorizontalGridView mHorizontalGridView;
-    private ViewPager mViewPager;
-    private Group mGroup;
-
     public Group getGroup() {
         return mGroup;
     }
-
-    private ConstraintLayout mClSearch;
-    private ConstraintLayout mClHistory;
-    private ConstraintLayout mClLogin;
-    private ConstraintLayout mClOpenVip;
-    private ScaleTextView mTvAd;
-
-    private Thread mThread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            String titleJson = LocalJsonResolutionUtil.getJson(MainActivity.this, "MyTitle.json");
-            //转换为对象
-            Title title = LocalJsonResolutionUtil.JsonToObject(titleJson, Title.class);
-            List<Title.DataBean> dataBeans = title.getData();
-            if (dataBeans != null && dataBeans.size() > 0) {
-                Message msg = Message.obtain();
-                msg.what = MSG_NOTIFY_TITLE;
-                msg.obj = dataBeans;
-                mHandler.sendMessage(msg);
-            }
-        }
-    });
 
     private void initView() {
         mHorizontalGridView = findViewById(R.id.hg_title);
@@ -340,8 +323,6 @@ public class MainActivity extends BaseActivity implements ContentFragment.OnFrag
         registerReceiver(networkChangeReceiver, intentFilter);
     }
 
-    private boolean isFirstIn = true;
-
     private void initViewPager(List<Title.DataBean> dataBeans) {
 
         ContentViewPagerAdapter viewPagerAdapter = new ContentViewPagerAdapter(getSupportFragmentManager());
@@ -387,51 +368,60 @@ public class MainActivity extends BaseActivity implements ContentFragment.OnFrag
         }
     }
 
-    private final OnChildViewHolderSelectedListener onChildViewHolderSelectedListener
-            = new OnChildViewHolderSelectedListener() {
-        @Override
-        public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
-            super.onChildViewHolderSelected(parent, child, position, subposition);
-            if (child != null & position != mCurrentPageIndex) {
-                Log.e(TAG, "onChildViewHolderSelected: 000 isSkipTabFromViewPager" + isSkipTabFromViewPager);
-                TextView currentTitle = child.itemView.findViewById(R.id.tv_main_title);
-                if (isSkipTabFromViewPager) {
-                    Log.e(TAG, "onChildViewHolderSelected: 111");
-
-                    if (mOldTitle != null) {
-                        Log.e(TAG, "onChildViewHolderSelected: 222");
-
-                        mOldTitle.setTextColor(getResources().getColor(R.color.colorWhite));
-                        Paint paint = mOldTitle.getPaint();
-                        if (paint != null) {
-                            paint.setFakeBoldText(false);
-                            //viewpager切页标题不刷新，调用invalidate刷新
-                            mOldTitle.invalidate();
-                        }
-                    }
-                    currentTitle.setTextColor(getResources().getColor(R.color.colorBlue));
-                    Paint paint = currentTitle.getPaint();
-                    if (paint != null) {
-                        paint.setFakeBoldText(true);
-                        //viewpager切页标题不刷新，调用invalidate刷新
-                        currentTitle.invalidate();
-                    }
-                }
-                mOldTitle = currentTitle;
-            }
-
-            isSkipTabFromViewPager = false;
-            Log.e(TAG, "onChildViewHolderSelected mViewPager != null: " + (mViewPager != null)
-                    + " position:" + position);
-            setCurrentItemPosition(position);
-
-        }
-    };
-
     private void setCurrentItemPosition(int position) {
         if (mViewPager != null && position != mCurrentPageIndex) {
             mCurrentPageIndex = position;
             mViewPager.setCurrentItem(position);
+        }
+    }
+
+    private static class MyHandler extends Handler {
+
+        private final WeakReference<MainActivity> mActivity;
+
+        MyHandler(MainActivity activity) {
+            mActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            MainActivity activity = mActivity.get();
+            if (activity != null) {
+                switch (msg.what) {
+                    case MSG_NOTIFY_TITLE:
+                        @SuppressWarnings("unchecked")
+                        List<Title.DataBean> dataBeans = (List<Title.DataBean>) msg.obj;
+                        ArrayObjectAdapter adapter = activity.getArrayObjectAdapter();
+                        if (adapter != null) {
+                            adapter.addAll(0, dataBeans);
+                            activity.initViewPager(dataBeans);
+                            HorizontalGridView horizontalGridView = activity.getHorizontalGridView();
+                            if (dataBeans.size() > Constants.TAG_FEATURE_POSITION) {
+                                if (horizontalGridView != null) {
+                                    horizontalGridView.setSelectedPositionSmooth(Constants.TAG_FEATURE_POSITION);
+                                    View positionView = horizontalGridView.getChildAt(Constants.TAG_FEATURE_POSITION);
+                                    if (positionView != null) {
+                                        activity.mOldTitle = positionView.findViewById(R.id.tv_main_title);
+                                    }
+                                }
+                            } else if (dataBeans.size() > 0) {
+                                if (activity.getHorizontalGridView() != null) {
+                                    horizontalGridView.setSelectedPositionSmooth(0);
+                                    View position0 = horizontalGridView.getChildAt(0);
+                                    if (position0 != null) {
+                                        activity.mOldTitle = position0.findViewById(R.id.tv_main_title);
+                                    }
+                                }
+                            }
+                        }
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        break;
+                }
+            }
         }
     }
 

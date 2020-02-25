@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.github.isuperred.widgets.ImgConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/FocusStyle"
     android:id="@+id/cl_type_seven"
+    style="@style/FocusStyle"
     android:layout_width="198dp"
     android:layout_height="111dp">
 

@@ -40,7 +40,6 @@ public class TabVerticalGridView extends VerticalGridView {
     }
 
 
-
     public void setTabView(View tabView) {
         this.mTabView = tabView;
     }
@@ -96,7 +95,7 @@ public class TabVerticalGridView extends VerticalGridView {
     }
 
     public boolean arrowScroll(int direction) {
-        Log.e(TAG, "arrowScroll direction: "+direction );
+        Log.e(TAG, "arrowScroll direction: " + direction);
 
         View currentFocused = findFocus();
         if (currentFocused == this) {

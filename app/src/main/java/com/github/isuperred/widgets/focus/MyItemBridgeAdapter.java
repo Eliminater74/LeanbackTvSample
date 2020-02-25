@@ -1,7 +1,6 @@
 package com.github.isuperred.widgets.focus;
 
 import android.view.View;
-import android.widget.AdapterView;
 
 import androidx.leanback.widget.ItemBridgeAdapter;
 import androidx.leanback.widget.ObjectAdapter;

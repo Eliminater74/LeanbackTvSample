@@ -4,20 +4,17 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.leanback.widget.Presenter;
-import androidx.leanback.widget.VerticalGridView;
 
 import com.github.isuperred.R;
 import com.github.isuperred.widgets.TabVerticalGridView;
 
 public class TypeFooterPresenter extends Presenter {
-    private Context mContext;
-
     private static final String TAG = "TypeFooterPresenter";
+    private Context mContext;
 
     @Override
     public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {

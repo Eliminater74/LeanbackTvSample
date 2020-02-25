@@ -84,6 +84,25 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
             }
         }
     };
+    private final Thread thread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            String json =
+                    LocalJsonResolutionUtil.getJson(VideoDetailActivity.this, "Video.json");
+            Video video = LocalJsonResolutionUtil.JsonToObject(json, Video.class);
+            final Message msg = Message.obtain();
+            msg.what = MSG_ADD_EPISODE;
+            msg.obj = video;
+            msg.arg1 = 1;
+            //延迟1秒模拟加载数据过程
+            mHandler.sendMessageDelayed(msg, 0);
+        }
+    });
+    private TextView mTvFullScreen;
+    private TextView mTvOpenVip;
+    private TextView mTvFavourite;
+    private TextView mTvMoreIntroduction;
+    private boolean isFullScreen = false;
 
     private void addEpisodeContent(Video.DataBean.EpisodeBean episodeBean) {
         if (episodeBean == null) {
@@ -239,11 +258,6 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    private TextView mTvFullScreen;
-    private TextView mTvOpenVip;
-    private TextView mTvFavourite;
-    private TextView mTvMoreIntroduction;
-
     private void initOthers() {
         mTvFullScreen = findViewById(R.id.tv_full_screen);
         mTvFullScreen.requestFocus();
@@ -251,21 +265,6 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
         mTvFavourite = findViewById(R.id.tv_favourite);
         mTvMoreIntroduction = findViewById(R.id.tv_more_introduction);
     }
-
-    private final Thread thread = new Thread(new Runnable() {
-        @Override
-        public void run() {
-            String json =
-                    LocalJsonResolutionUtil.getJson(VideoDetailActivity.this, "Video.json");
-            Video video = LocalJsonResolutionUtil.JsonToObject(json, Video.class);
-            final Message msg = Message.obtain();
-            msg.what = MSG_ADD_EPISODE;
-            msg.obj = video;
-            msg.arg1 = 1;
-            //延迟1秒模拟加载数据过程
-            mHandler.sendMessageDelayed(msg, 0);
-        }
-    });
 
     private void initData() {
         thread.start();
@@ -342,8 +341,6 @@ public class VideoDetailActivity extends BaseActivity implements View.OnClickLis
                 break;
         }
     }
-
-    private boolean isFullScreen = false;
 
     private void toggleFullScreen() {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) videoPlayer.getLayoutParams();

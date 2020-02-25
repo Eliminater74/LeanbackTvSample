@@ -23,9 +23,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.github.isuperred.R;
+import com.github.isuperred.activity.MainActivity;
 import com.github.isuperred.base.BaseLazyLoadFragment;
 import com.github.isuperred.bean.Content;
-import com.github.isuperred.activity.MainActivity;
 import com.github.isuperred.bean.Footer;
 import com.github.isuperred.bean.TypeSeven;
 import com.github.isuperred.content.ContentPresenterSelector;
@@ -58,159 +58,29 @@ public class ContentFragment extends BaseLazyLoadFragment {
 
     private TabVerticalGridView mVerticalGridView;
     private MainActivity mActivity;
+    private final RecyclerView.OnScrollListener onScrollListener
+            = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            super.onScrollStateChanged(recyclerView, newState);
+            switch (newState) {
+                //当屏幕滚动且用户使用的触碰或手指还在屏幕上，停止加载图片
+                case RecyclerView.SCROLL_STATE_DRAGGING:
+                    //由于用户的操作，屏幕产生惯性滑动，停止加载图片
+                case RecyclerView.SCROLL_STATE_SETTLING:
+                    Glide.with(mActivity).pauseRequests();
+                    break;
+                case RecyclerView.SCROLL_STATE_IDLE:
+                    Glide.with(mActivity).resumeRequests();
+            }
+        }
+    };
     private View mRootView;
     private Handler mHandler;
     private ProgressBar mPbLoading;
     private ArrayObjectAdapter mAdapter;
-
     private int mCurrentTabPosition;
     private String mCurrentTabCode;
-
-    @SuppressLint("HandlerLeak")
-    private class MyHandler extends Handler {
-
-
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case MSG_ADD_ITEM:
-
-                    Content content = msg.getData().getParcelable(MSG_BUNDLE_KEY_ADD_ITEM);
-                    if (content == null) {
-                        break;
-                    }
-                    List<Content.DataBean> dataBeans = content.getData();
-                    for (int i = 0; i < dataBeans.size(); i++) {
-                        Content.DataBean dataBean = dataBeans.get(i);
-                        addItem(dataBean);
-                    }
-                    addFooter();
-                    mPbLoading.setVisibility(View.GONE);
-                    mVerticalGridView.setVisibility(View.VISIBLE);
-                    break;
-                case MSG_REMOVE_LOADING:
-                    mPbLoading.setVisibility(View.GONE);
-                    break;
-                default:
-                    break;
-            }
-
-        }
-    }
-
-    private ContentFragment.OnFragmentInteractionListener mListener;
-
-    public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(Uri uri);
-    }
-
-    public static ContentFragment newInstance(int position, String tabCode) {
-        Log.e(TAG + " pos:" + position, "new Instance status: " + position + " tab:" + tabCode);
-        ContentFragment fragment = new ContentFragment();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt(BUNDLE_KEY_POSITION, position);
-        bundle.putString(BUNDLE_KEY_TAB_CODE, tabCode);
-        fragment.setArguments(bundle);
-
-        return fragment;
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-        if (context instanceof ContentFragment.OnFragmentInteractionListener) {
-            mListener = (ContentFragment.OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-        mActivity = (MainActivity) context;
-        mHandler = new MyHandler();
-
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Log.e(TAG + " pos:", "onCreate: ");
-        Bundle bundle = getArguments();
-        if (bundle == null) {
-            return;
-        }
-        mCurrentTabPosition = getArguments().getInt(BUNDLE_KEY_POSITION);
-        mCurrentTabCode = getArguments().getString(BUNDLE_KEY_TAB_CODE);
-        Log.e(TAG + " pos:" + mCurrentTabPosition, " tabCode: " + mCurrentTabCode);
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        if (mRootView == null) {
-            mRootView = inflater.inflate(R.layout.fragment_content, container, false);
-            initView();
-            initListener();
-        }
-        return mRootView;
-    }
-
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    private void initView() {
-        mPbLoading = mRootView.findViewById(R.id.pb_loading);
-        mVerticalGridView = mRootView.findViewById(R.id.hg_content);
-        mVerticalGridView.setTabView(mActivity.getHorizontalGridView());
-        mVerticalGridView.setGroup(mActivity.getGroup());
-        mVerticalGridView.setVerticalSpacing(FontDisplayUtil.dip2px(mActivity, 24));
-        ContentPresenterSelector presenterSelector = new ContentPresenterSelector();
-        mAdapter = new ArrayObjectAdapter(presenterSelector);
-        ItemBridgeAdapter itemBridgeAdapter = new ItemBridgeAdapter(mAdapter);
-        mVerticalGridView.setAdapter(itemBridgeAdapter);
-
-    }
-
-    private void initListener() {
-        mVerticalGridView.addOnScrollListener(onScrollListener);
-        mVerticalGridView.addOnChildViewHolderSelectedListener(onSelectedListener);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        thread.interrupt();
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
-        if (mVerticalGridView != null) {
-            mVerticalGridView.removeOnScrollListener(onScrollListener);
-            mVerticalGridView.removeOnChildViewHolderSelectedListener(onSelectedListener);
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        Log.e(TAG, "setUserVisibleHint mCurrentTabPosition: " + mCurrentTabPosition
-                + " isVisibleToUser:" + isVisibleToUser);
-        if (!isVisibleToUser) {
-            scrollToTop();
-        }
-    }
-
-    @Override
-    public void fetchData() {
-        loadData();
-    }
-
     private final Thread thread = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -298,6 +168,136 @@ public class ContentFragment extends BaseLazyLoadFragment {
 
         }
     });
+    private ContentFragment.OnFragmentInteractionListener mListener;
+    private final OnChildViewHolderSelectedListener onSelectedListener
+            = new OnChildViewHolderSelectedListener() {
+        @Override
+        public void onChildViewHolderSelected(RecyclerView parent,
+                                              RecyclerView.ViewHolder child,
+                                              int position, int subposition) {
+            super.onChildViewHolderSelected(parent, child, position, subposition);
+            Log.e(TAG, "onChildViewHolderSelected: " + position
+            );
+
+            if (mVerticalGridView == null) {
+                return;
+            }
+            Log.e(TAG, "onChildViewHolderSelected: " + "　isPressUp:" + mVerticalGridView.isPressUp()
+                    + " isPressDown:" + mVerticalGridView.isPressDown());
+
+            if (mVerticalGridView.isPressUp() && position == 0) {
+                mListener.onFragmentInteraction(Uri.parse(Constants.URI_SHOW_TITLE));
+            } else if (mVerticalGridView.isPressDown() && position == 1) {
+                mListener.onFragmentInteraction(Uri.parse(Constants.URI_HIDE_TITLE));
+            }
+        }
+    };
+
+    public static ContentFragment newInstance(int position, String tabCode) {
+        Log.e(TAG + " pos:" + position, "new Instance status: " + position + " tab:" + tabCode);
+        ContentFragment fragment = new ContentFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putInt(BUNDLE_KEY_POSITION, position);
+        bundle.putString(BUNDLE_KEY_TAB_CODE, tabCode);
+        fragment.setArguments(bundle);
+
+        return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof ContentFragment.OnFragmentInteractionListener) {
+            mListener = (ContentFragment.OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+        mActivity = (MainActivity) context;
+        mHandler = new MyHandler();
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.e(TAG + " pos:", "onCreate: ");
+        Bundle bundle = getArguments();
+        if (bundle == null) {
+            return;
+        }
+        mCurrentTabPosition = getArguments().getInt(BUNDLE_KEY_POSITION);
+        mCurrentTabCode = getArguments().getString(BUNDLE_KEY_TAB_CODE);
+        Log.e(TAG + " pos:" + mCurrentTabPosition, " tabCode: " + mCurrentTabCode);
+
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        if (mRootView == null) {
+            mRootView = inflater.inflate(R.layout.fragment_content, container, false);
+            initView();
+            initListener();
+        }
+        return mRootView;
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    private void initView() {
+        mPbLoading = mRootView.findViewById(R.id.pb_loading);
+        mVerticalGridView = mRootView.findViewById(R.id.hg_content);
+        mVerticalGridView.setTabView(mActivity.getHorizontalGridView());
+        mVerticalGridView.setGroup(mActivity.getGroup());
+        mVerticalGridView.setVerticalSpacing(FontDisplayUtil.dip2px(mActivity, 24));
+        ContentPresenterSelector presenterSelector = new ContentPresenterSelector();
+        mAdapter = new ArrayObjectAdapter(presenterSelector);
+        ItemBridgeAdapter itemBridgeAdapter = new ItemBridgeAdapter(mAdapter);
+        mVerticalGridView.setAdapter(itemBridgeAdapter);
+
+    }
+
+    private void initListener() {
+        mVerticalGridView.addOnScrollListener(onScrollListener);
+        mVerticalGridView.addOnChildViewHolderSelectedListener(onSelectedListener);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        thread.interrupt();
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        if (mVerticalGridView != null) {
+            mVerticalGridView.removeOnScrollListener(onScrollListener);
+            mVerticalGridView.removeOnChildViewHolderSelectedListener(onSelectedListener);
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.e(TAG, "setUserVisibleHint mCurrentTabPosition: " + mCurrentTabPosition
+                + " isVisibleToUser:" + isVisibleToUser);
+        if (!isVisibleToUser) {
+            scrollToTop();
+        }
+    }
+
+    @Override
+    public void fetchData() {
+        loadData();
+    }
 
     private void loadData() {
         mPbLoading.setVisibility(View.VISIBLE);
@@ -502,49 +502,6 @@ public class ContentFragment extends BaseLazyLoadFragment {
         addWithTryCatch(new Footer());
     }
 
-
-    private final RecyclerView.OnScrollListener onScrollListener
-            = new RecyclerView.OnScrollListener() {
-        @Override
-        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-            super.onScrollStateChanged(recyclerView, newState);
-            switch (newState) {
-                //当屏幕滚动且用户使用的触碰或手指还在屏幕上，停止加载图片
-                case RecyclerView.SCROLL_STATE_DRAGGING:
-                    //由于用户的操作，屏幕产生惯性滑动，停止加载图片
-                case RecyclerView.SCROLL_STATE_SETTLING:
-                    Glide.with(mActivity).pauseRequests();
-                    break;
-                case RecyclerView.SCROLL_STATE_IDLE:
-                    Glide.with(mActivity).resumeRequests();
-            }
-        }
-    };
-
-    private final OnChildViewHolderSelectedListener onSelectedListener
-            = new OnChildViewHolderSelectedListener() {
-        @Override
-        public void onChildViewHolderSelected(RecyclerView parent,
-                                              RecyclerView.ViewHolder child,
-                                              int position, int subposition) {
-            super.onChildViewHolderSelected(parent, child, position, subposition);
-            Log.e(TAG, "onChildViewHolderSelected: " + position
-            );
-
-            if (mVerticalGridView == null) {
-                return;
-            }
-            Log.e(TAG, "onChildViewHolderSelected: " + "　isPressUp:" + mVerticalGridView.isPressUp()
-                    + " isPressDown:" + mVerticalGridView.isPressDown());
-
-            if (mVerticalGridView.isPressUp() && position == 0) {
-                mListener.onFragmentInteraction(Uri.parse(Constants.URI_SHOW_TITLE));
-            } else if (mVerticalGridView.isPressDown() && position == 1) {
-                mListener.onFragmentInteraction(Uri.parse(Constants.URI_HIDE_TITLE));
-            }
-        }
-    };
-
     private void addWithTryCatch(Object item) {
         try {
             if (!mVerticalGridView.isComputingLayout()) {
@@ -552,6 +509,42 @@ public class ContentFragment extends BaseLazyLoadFragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onFragmentInteraction(Uri uri);
+    }
+
+    @SuppressLint("HandlerLeak")
+    private class MyHandler extends Handler {
+
+
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_ADD_ITEM:
+
+                    Content content = msg.getData().getParcelable(MSG_BUNDLE_KEY_ADD_ITEM);
+                    if (content == null) {
+                        break;
+                    }
+                    List<Content.DataBean> dataBeans = content.getData();
+                    for (int i = 0; i < dataBeans.size(); i++) {
+                        Content.DataBean dataBean = dataBeans.get(i);
+                        addItem(dataBean);
+                    }
+                    addFooter();
+                    mPbLoading.setVisibility(View.GONE);
+                    mVerticalGridView.setVisibility(View.VISIBLE);
+                    break;
+                case MSG_REMOVE_LOADING:
+                    mPbLoading.setVisibility(View.GONE);
+                    break;
+                default:
+                    break;
+            }
+
         }
     }
 

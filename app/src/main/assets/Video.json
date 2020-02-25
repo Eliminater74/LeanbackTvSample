@@ -51,7 +51,8 @@
             "isVip": false,
             "number": "9",
             "url": "http://cn7.kankia.com/hls/20191224/a90acc7d065e856e59c45630ad61aa30/1577168333/index.m3u8"
-          },{
+          },
+          {
             "isVip": false,
             "number": "10",
             "url": "http://cn7.kankia.com/hls/20191225/690d6c44f7261027c8611ef252a99997/1577283933/index.m3u8"
@@ -105,7 +106,8 @@
             "isVip": false,
             "number": "19",
             "url": "http://cn7.kankia.com/hls/20191230/7ae289168f04e9c0d99dcf24d8725a33/1577715623/index.m3u8"
-          },{
+          },
+          {
             "isVip": false,
             "number": "20",
             "url": "http://cn7.kankia.com/hls/20191230/9268a716ce6e314ea3248e3749dec13a/1577715865/index.m3u8"
@@ -159,7 +161,8 @@
             "isVip": false,
             "number": "29",
             "url": "http://cn7.kankia.com/hls/20200105/ab18bb4d7156d1e23d4c145dfbf52bbe/1578232379/index.m3u8"
-          },{
+          },
+          {
             "isVip": false,
             "number": "30",
             "url": "http://cn7.kankia.com/hls/20200106/10bf669ed5764bac2dd1809527c0b232/1578314101/index.m3u8"
@@ -213,7 +216,8 @@
             "isVip": false,
             "number": "39",
             "url": "http://cn7.kankia.com/hls/20200110/cacca4fd693fba0110f5b2ef8959c5e3/1578668381/index.m3u8"
-          },{
+          },
+          {
             "isVip": false,
             "number": "40",
             "url": "http://cn7.kankia.com/hls/20200111/a981ee9d4db9f5acfd2649aeb8702308/1578751434/index.m3u8"

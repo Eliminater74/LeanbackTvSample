@@ -2,7 +2,6 @@ package com.github.isuperred.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 
 import androidx.leanback.widget.VerticalGridView;
@@ -56,7 +55,7 @@ public class AppVerticalGridView extends VerticalGridView {
                     if (currentPosition + 1 % mNumColumns == 0) {
                         currentLine = currentPosition / mNumColumns;
                     } else {
-                        currentLine = currentPosition/ mNumColumns + 1;
+                        currentLine = currentPosition / mNumColumns + 1;
                     }
                     if ((currentLine == lineNumbers - 1)//倒数第二行
                             && ((currentPosition + 1 + mNumColumns) > itemCount)) {

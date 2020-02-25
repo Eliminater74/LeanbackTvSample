@@ -18,9 +18,8 @@ import com.github.isuperred.utils.FontDisplayUtil;
 
 
 public class TypeFiveContentPresenter extends Presenter {
-    private Context mContext;
-
     private static final String TAG = "TypeFiveContentPresenter";
+    private Context mContext;
 
     @Override
     public Presenter.ViewHolder onCreateViewHolder(ViewGroup parent) {
@@ -46,7 +45,7 @@ public class TypeFiveContentPresenter extends Presenter {
             if (!TextUtils.isEmpty(((Content.DataBean.WidgetsBean) item).getName())) {
                 vh.mIvTypeFiveName.setText(((Content.DataBean.WidgetsBean) item).getName());
             }
-            if(!TextUtils.isEmpty(((Content.DataBean.WidgetsBean) item).getDesc())){
+            if (!TextUtils.isEmpty(((Content.DataBean.WidgetsBean) item).getDesc())) {
                 vh.mIvTypeFiveDesc.setText(((Content.DataBean.WidgetsBean) item).getDesc());
             }
         }

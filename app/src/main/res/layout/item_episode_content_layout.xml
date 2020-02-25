@@ -2,19 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="81dp"
     android:layout_height="40dp"
-    android:focusableInTouchMode="true"
-    android:focusable="true"
-    android:clickable="true"
     android:background="@drawable/selector_focus_bg_corner3_with_default_bg"
-    >
-    <TextView
-        xmlns:tools="http://schemas.android.com/tools"
+    android:clickable="true"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+    <TextView xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/tv_episode_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textColor="@color/colorWhite"
         android:orientation="vertical"
+        android:textColor="@color/colorWhite"
         tools:text="1-10" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

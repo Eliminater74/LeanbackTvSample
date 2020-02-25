@@ -19,12 +19,12 @@
         android:id="@+id/tv_desc"
         android:layout_width="match_parent"
         android:layout_height="21dp"
-        android:paddingTop="5dp"
+        android:background="@drawable/selector_text_bg"
         android:duplicateParentState="true"
         android:gravity="center|start"
+        android:paddingTop="5dp"
         android:textColor="#FFFFFF"
         android:textSize="12sp"
-        android:background="@drawable/selector_text_bg"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:text="诛仙" />
 
